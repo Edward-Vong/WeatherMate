@@ -2,5 +2,6 @@ app\App.class
 app\APIManager\APIConnector.class
 module-info.class
 app\PrimaryController.class
+app\HomeController.class
 app\SecondaryController.class
 app\APIManager\URLBuilder.class

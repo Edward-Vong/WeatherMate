@@ -3,7 +3,6 @@ package app.APIManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -21,33 +20,68 @@ public class APIConnector {
 
     public JSONArray getJSONArray() {
         try {
-                HttpURLConnection conn = 
-                    (HttpURLConnection) urlString.openConnection();
-                conn.setRequestMethod("GET");
-                conn.connect();
+            HttpURLConnection conn = 
+                (HttpURLConnection) urlString.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
 
-                int responseCode = conn.getResponseCode();
+            int responseCode = conn.getResponseCode();
 
-                if (responseCode != 200) {
-                    throw new RuntimeException("HttpResponseCode: " + responseCode);
-                } 
-                
-                else {
-                    StringBuilder informationString = new StringBuilder();
-                    Scanner scanner = new Scanner(urlString.openStream());
+            if (responseCode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responseCode);
+            } 
+            
+            else {
+                StringBuilder informationString = new StringBuilder();
+                Scanner scanner = new Scanner(urlString.openStream());
 
-                    while (scanner.hasNext()) {
-                        informationString.append(scanner.nextLine());
-                    }
+                while (scanner.hasNext()) {
+                    informationString.append(scanner.nextLine());
+                }
 
-                    scanner.close();
+                scanner.close();
 
-                    JSONParser parse = new JSONParser();
+                JSONParser parse = new JSONParser();
 
-                    return (JSONArray) parse.parse(String.valueOf(informationString));
+                return (JSONArray) parse.parse(String.valueOf(informationString));
             }
         } 
         
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public JSONObject getJSONObject() {
+        try {
+            HttpURLConnection conn = 
+                (HttpURLConnection) urlString.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responseCode);
+            } 
+
+            else {
+                StringBuilder informationString = new StringBuilder();
+                Scanner scanner = new Scanner(urlString.openStream());
+
+                while (scanner.hasNext()) {
+                    informationString.append(scanner.nextLine());
+                }
+                scanner.close();
+
+                JSONParser parse = new JSONParser();
+
+                return (JSONObject) parse.parse(String.valueOf(informationString));
+            }
+        }
+
         catch (Exception e) {
             e.printStackTrace();
         }
