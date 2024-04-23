@@ -1,8 +1,8 @@
 package app.APIManager;
 
-import java.util.Scanner;
+/* import java.util.Scanner;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileNotFoundException; */
 
 public class URLBuilder {
     private static final String GEOCODE_URL = "http://api.openweathermap.org/geo/1.0/";
@@ -40,7 +40,7 @@ public class URLBuilder {
         return  query + "&appid=" + key;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         try {
             File file = new File("API_KEY.txt");
             
@@ -55,5 +55,5 @@ public class URLBuilder {
             System.out.println("Error Occurred");
             e.printStackTrace();
         }
-    }
+    } */
 }
