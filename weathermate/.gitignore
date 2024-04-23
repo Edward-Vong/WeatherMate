@@ -1,2 +1,2 @@
-src/main/java/app/APIManager/API_KEY.txt
-weathermate/target/
+src/main/java/app/ContainerManagers/APIManager/config.properties
+/target/

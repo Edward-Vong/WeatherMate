@@ -7,8 +7,17 @@ import javafx.scene.layout.HBox;
 import app.ContainerManagers.Utilities.ComboBoxUtility;
 import javafx.collections.ObservableList;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import app.ContainerManagers.APIManager.URLBuilder;
+
 public class CityContainerManager {
     private HBox cityContainer;
+    private TextField cityTextField;
+    private ComboBox<String> stateComboBox;
+    private ComboBox<String> countryComboBox;
+
     private ObservableList<String> stateCodes;
     private ObservableList<String> countryCodes;
 
@@ -26,28 +35,58 @@ public class CityContainerManager {
         cityContainer = new HBox();
         cityContainer.setId("citySearchBox");
 
-        TextField cityTextField = new TextField();
+        cityTextField = new TextField();
         cityTextField.setPromptText("Enter a city name");
 
         cityContainer.getChildren().add(cityTextField);
 
         createComboBoxes(stateCodes, countryCodes);
 
-        Button SearchButton = new Button("Search");
-        cityContainer.getChildren().add(SearchButton);
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction(event -> {
+            try {
+                performSearch();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        cityContainer.getChildren().add(searchButton);
     }
 
     private void createComboBoxes(ObservableList<String> stateCodes, ObservableList<String> countryCodes) {
-        ComboBox<String> stateComboBox = ComboBoxUtility.initializeComboBox(stateCodes, 0, 150);
-        ComboBox<String> countryComboBox = ComboBoxUtility.initializeComboBox(countryCodes, 0, 150);
+        stateComboBox = ComboBoxUtility.initializeComboBox(stateCodes, 0, 150);
+        countryComboBox = ComboBoxUtility.initializeComboBox(countryCodes, 0, 150);
     
-        // Specific behavior for the country ComboBox that disables the state ComboBox based on selection
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             stateComboBox.setDisable(!"US".equals(newVal));
         });
-        countryComboBox.getSelectionModel().select("US"); // Select "US" by default
+        countryComboBox.getSelectionModel().select("US");
     
         // Add to the container
         cityContainer.getChildren().addAll(stateComboBox, countryComboBox);
     }
+
+    private void performSearch() throws FileNotFoundException, IOException {
+        String city = cityTextField.getText();
+        String state = stateComboBox.getValue();
+        String country = countryComboBox.getValue();
+
+        illegalSearchArg(state, "state", stateCodes);
+        illegalSearchArg(country, "country", countryCodes);
+
+        URLBuilder url = new URLBuilder();
+        String geoQueryString = url.cityGeoURL(city, state, country);
+
+        System.out.println(geoQueryString);
+    }
+
+    private void illegalSearchArg(String input, String type, ObservableList<String> list) {
+        if (input == list.get(0)) {
+            throw new IllegalArgumentException("Invalid " + type + ": \"" + input + "\" is not allowed.");
+        }
+    }
+
+
 }

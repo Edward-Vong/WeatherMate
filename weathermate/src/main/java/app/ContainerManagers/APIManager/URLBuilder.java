@@ -1,5 +1,11 @@
 package app.ContainerManagers.APIManager;
 
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /* import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException; */
@@ -7,10 +13,23 @@ import java.io.FileNotFoundException; */
 public class URLBuilder {
     private static final String GEOCODE_URL = "http://api.openweathermap.org/geo/1.0/";
     private static final String WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/forecast";
-    private final String key;
+    private String key;
 
-    public URLBuilder(String key) {
-        this.key = key;
+    public URLBuilder() throws FileNotFoundException, IOException {
+        Properties p = new Properties();
+        try(InputStream input = new FileInputStream("properties/config.properties")) {
+            p.load(input);
+            key = p.getProperty("api_key");
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (key == null) {
+            System.out.println("Missing key");
+            throw new IllegalStateException("API key is required but was not found in config.properties");
+        }
     }
 
     public String getQueryUrl(double lon, double lat) {
@@ -20,11 +39,13 @@ public class URLBuilder {
 
     public String cityGeoURL(String city, String stateCode, String countryCode) {
         String geoURL = GEOCODE_URL;
-
-        geoURL += "direct?q=" + city;
-        if (stateCode != "") geoURL += "." + stateCode;
-        if (countryCode != "") geoURL += "," + countryCode;
-
+    
+        String formattedCity = city.replace(" ", "_");
+    
+        geoURL += "direct?q=" + formattedCity;
+        if (!stateCode.isEmpty()) geoURL += "," + stateCode;
+        if (!countryCode.isEmpty()) geoURL += "," + countryCode;
+    
         return buildUrl(geoURL);
     }
 
