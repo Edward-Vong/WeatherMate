@@ -4,6 +4,7 @@ module app {
     requires javafx.fxml;
     
     requires json.simple; //unstable need fix later
+    requires java.net.http;
 
     opens app to javafx.fxml;
     exports app;

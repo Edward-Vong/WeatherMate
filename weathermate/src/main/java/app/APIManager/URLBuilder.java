@@ -1,6 +1,11 @@
 package app.APIManager;
 
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+
 public class URLBuilder {
+    private static final String GEOCODE_URL = "http://api.openweathermap.org/geo/1.0/";
     private static final String WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private final String key;
 
@@ -8,27 +13,47 @@ public class URLBuilder {
         this.key = key;
     }
 
-    public String getCityUrl(String city) {
-        return buildUrl("q=" + city);
+    public String getQueryUrl(double lon, double lat) {
+        String query = WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon;
+        return buildUrl(query);
     }
 
-    public String getCoordUrl(double lon, double lat) {
-        return buildUrl("lat=" + lat + "&lon=" + lon);
+    public String cityGeoURL(String city, String stateCode, String countryCode) {
+        String geoURL = GEOCODE_URL;
+
+        geoURL += "direct?q=" + city;
+        if (stateCode != "") geoURL += "." + stateCode;
+        if (countryCode != "") geoURL += "," + countryCode;
+
+        return buildUrl(geoURL);
     }
 
-    public String getIdUrl(int id) {
-        return buildUrl("id=" + id);
-    }
+    public String zipGeoUrl(int zip, String countryCode) {
+        String geoURL = GEOCODE_URL;
+        geoURL += "zip?zip=" + zip;
+        if (countryCode != "") geoURL += "," + countryCode;
 
-    public String getZipUrlUS(int zip) {
-        return buildUrl("zip=" + zip + ",us");
-    }
-
-    public String getZipUrlInternational(int zip, int countryCode) {
-        return buildUrl("zip=" + zip + "," + countryCode);
+        return buildUrl(geoURL);
     }
 
     private String buildUrl(String query) {
-        return WEATHER_API_URL + "?" + query + "&appid=" + key;
+        return  query + "&appid=" + key;
+    }
+
+    public static void main(String[] args) {
+        try {
+            File file = new File("API_KEY.txt");
+            
+            Scanner sc = new Scanner(file);
+            URLBuilder url = new URLBuilder(sc.nextLine());
+            sc.close();
+
+            System.out.println(url.cityGeoURL("San Jose", "", ""));
+        }
+
+        catch (FileNotFoundException e) {
+            System.out.println("Error Occurred");
+            e.printStackTrace();
+        }
     }
 }
