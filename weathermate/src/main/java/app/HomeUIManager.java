@@ -1,14 +1,12 @@
 package app;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class HomeController {
+public class HomeUIManager {
 
     @FXML
     private VBox mainContainer;
@@ -49,16 +47,23 @@ public class HomeController {
         cityContainer.setId("citySearchBox");
         TextField cityTextField = new TextField();
         cityTextField.setPromptText("Enter a city name");
-        
-        ChoiceBox<String> stateChoiceBox = new ChoiceBox<>(stateCodes);
-        ChoiceBox<String> countryChoiceBox = new ChoiceBox<>(countryCodes);
-        
-        countryChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            stateChoiceBox.setDisable(!"US".equals(newVal));
-        });
-        countryChoiceBox.getSelectionModel().select("US");
 
-        cityContainer.getChildren().addAll(cityTextField, stateChoiceBox, countryChoiceBox);
+        ComboBox<String> stateComboBox = new ComboBox<>(stateCodes);
+        stateComboBox.setPrefWidth(150);
+        stateComboBox.setVisibleRowCount(10);
+        
+        ComboBox<String> countryComboBox = new ComboBox<>(countryCodes);
+        countryComboBox.setPrefWidth(150);
+        countryComboBox.setVisibleRowCount(10);
+        
+        countryComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            stateComboBox.setDisable(!"US".equals(newVal));
+        });
+        countryComboBox.getSelectionModel().select("US");
+
+        cityContainer.getChildren().addAll(cityTextField, stateComboBox, countryComboBox);
+
+        addSearchButton(cityContainer);
     }
 
     private void initializeZipContainer() {
@@ -69,6 +74,8 @@ public class HomeController {
 
         ChoiceBox<String> zipCountryChoiceBox = new ChoiceBox<>(countryCodes);
         zipContainer.getChildren().addAll(zipTextField, zipCountryChoiceBox);
+
+        addSearchButton(zipContainer);
     }
 
     private void initializeCoordinateContainer() {
@@ -79,6 +86,8 @@ public class HomeController {
         TextField longitudeTextField = new TextField();
         longitudeTextField.setPromptText("Enter longitude");
         coordinateContainer.getChildren().addAll(latitudeTextField, longitudeTextField);
+
+        addSearchButton(coordinateContainer);
     }
 
     private void setupChoiceBoxListeners() {
@@ -96,5 +105,10 @@ public class HomeController {
                     break;
             }
         });
+    }
+
+    private void addSearchButton(HBox container) {
+        Button SearchButton = new Button("Search");
+        container.getChildren().add(SearchButton);
     }
 }

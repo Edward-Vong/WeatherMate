@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Text?>
 
 <VBox fx:id="mainContainer" prefHeight="395.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
- fx:controller="app.HomeController">
+ fx:controller="app.HomeUIManager">
     <children>
         <HBox fx:id="searchTypeBar" alignment="CENTER_LEFT" prefHeight="40.0">
           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type of Location Search: " />
