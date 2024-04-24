@@ -15,72 +15,32 @@ public class APIConnector {
     private URL url;
     private HttpURLConnection conn;
 
-    public double[] findCoordinate(String geoURL) throws IOException {
-        if (URLconnection(geoURL)) {
-            String JSON = String.valueOf(transcribeJSON());
-            JSONArray jsonArr = new JSONArray(JSON);
-            JSONObject jsonObj = jsonArr.getJSONObject(0);
-
-            double[] coords = new double[2];
-
-            coords[0] = jsonObj.getDouble("lat");
-            coords[1] = jsonObj.getDouble("lon");
-
-            return coords;
-        }
-
-        return null;
-    }
-
     public HashMap<Integer, JSONObject> getWeatherHashMap(String geoQuery) throws IOException {
-        JSONArray weatherArr = getWeatherArr(geoQuery);
-        JSONObject jsonData = new JSONObject(weatherArr);
+        //get the query url for the api call
+        String query = getQuery(geoQuery);
+
+        //collect the response data into usable objects
+        JSONObject jsonData = getJSONObj(query);
+        JSONArray weatherArr = new JSONArray(jsonData.getJSONArray("list"));
+        
+        //initialize hashmap
         HashMap<Integer, JSONObject> weatherHashMap = new HashMap<>();
         
+        //get counts of all objects in weatherArr
         int count = jsonData.getInt("cnt");
 
+        //For every element in list, put them into HashMap with associated id value
         for(int i = 0; i < count; i++) {
             jsonData = new JSONObject(weatherArr.getJSONObject(i));
             weatherHashMap.put(i, jsonData);
         }
 
+        //if the size of the Hash is not equal to the count of elements in the list throw error
         if(weatherHashMap.size() != count) {
             throw new RuntimeException("Did not complete forecast collection");
         }
 
         return weatherHashMap;
-    }
-
-    @SuppressWarnings("deprecation")
-    private boolean URLconnection(String query) throws IOException{
-        try {
-            this.url = new URL(query);
-
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            
-            conn.connect();
-            int responseCode = conn.getResponseCode();
-
-            if(responseCode != HttpURLConnection.HTTP_OK) {
-                throw new IOException("HTTP GET request failed with Error code: " + responseCode);
-            }
-
-            else {
-                return true;
-            }
-
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        catch(Exception e) {
-            e.printStackTrace();
-            throw new IOException("Failed to connect due to an unspecified error.", e);
-        }
     }
 
     private StringBuilder transcribeJSON() throws IOException {
@@ -99,27 +59,71 @@ public class APIConnector {
 
         return informationString;
     }
+    
+    @SuppressWarnings("deprecation")
+    private boolean URLconnection(String query) throws IOException{
+        try {
+            this.url = new URL(query);
 
-    private JSONArray transcribeWeather(String query) throws IOException {
-        if (URLconnection(query)) {
-            String JSONString = String.valueOf(transcribeJSON());
-            JSONObject JSON = new JSONObject(JSONString);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            
+            conn.connect();
+            int responseCode = conn.getResponseCode();
 
-            return new JSONArray(JSON.getJSONObject("list"));
+            if(responseCode != HttpURLConnection.HTTP_OK) {
+                JSONObject errorResponse = new JSONObject(String.valueOf(transcribeJSON()));
+                throw new IOException("HTTP GET request failed with Error code: " + responseCode
+                                    + "\n" + errorResponse.getString("message"));
+            }
+
+            else {
+                return true;
+            }
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        catch(Exception e) {
+            e.printStackTrace();
+            throw new IOException("Failed to connect due to an unspecified error.", e);
+        }
+    }
+
+    private String getQuery(String geoURL) throws IOException {
+        if (URLconnection(geoURL)) {
+            String JSON = String.valueOf(transcribeJSON());
+            JSONArray jsonArr = new JSONArray(JSON);
+            JSONObject jsonObj = jsonArr.getJSONObject(0);
+
+            double[] coords = new double[2];
+
+            coords[0] = jsonObj.getDouble("lat");
+            coords[1] = jsonObj.getDouble("lon");
+
+            URLBuilder builder = new URLBuilder();
+            
+            System.out.println("lat: " + coords[0] + "\nlon: " + coords[1]);
+            String query = builder.getQueryUrl(coords[0], coords[1]);
+            System.out.print(query + "\n");
+
+            return query;
         }
 
         return null;
     }
 
-    private JSONArray getWeatherArr(String geoQuery) throws IOException {
-        URLBuilder builder = new URLBuilder();
+    private JSONObject getJSONObj(String query) throws IOException {
+        if (URLconnection(query)) {
+            String JSONString = String.valueOf(transcribeJSON());
+            JSONObject JSON = new JSONObject(JSONString);
 
-        double[] coords = findCoordinate(geoQuery);
-        
-        System.out.println("lat: " + coords[0] + "\nlon: " + coords[1]);
-        String query = builder.getQueryUrl(coords[0], coords[1]);
-        System.out.print(query);
-    
-        return transcribeWeather(query);
-    }
+            return JSON;
+        }
+
+        return null;
+    } 
 } 
