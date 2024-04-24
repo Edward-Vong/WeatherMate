@@ -4,13 +4,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import app.ContainerManagers.Utilities.ComboBoxUtility;
 import javafx.collections.ObservableList;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import app.ContainerManagers.APIManager.URLBuilder;
+import app.ContainerManagers.Utilities.ComboBoxUtility;
+import app.ContainerManagers.APIManager.APIConnector;
 
 public class CityContainerManager {
     private HBox cityContainer;
@@ -69,17 +70,22 @@ public class CityContainerManager {
     }
 
     private void performSearch() throws FileNotFoundException, IOException {
+        //get all values from fields
         String city = cityTextField.getText();
         String state = stateComboBox.getValue();
         String country = countryComboBox.getValue();
 
+        //check if something is being search that should not be
         illegalSearchArg(state, "state", stateCodes);
         illegalSearchArg(country, "country", countryCodes);
 
-        URLBuilder url = new URLBuilder();
-        String geoQueryString = url.cityGeoURL(city, state, country);
+        //create the geo coordinate query URL based off of entered data
+        URLBuilder urlBuilder = new URLBuilder();
+        String geoQueryString = urlBuilder.cityGeoURL(city, state, country);
 
-        System.out.println(geoQueryString);
+        //have the data coordinates create a HashMap for forecast data
+        APIConnector connector = new APIConnector();
+        connector.getWeatherHashMap(geoQueryString);
     }
 
     private void illegalSearchArg(String input, String type, ObservableList<String> list) {
@@ -87,6 +93,4 @@ public class CityContainerManager {
             throw new IllegalArgumentException("Invalid " + type + ": \"" + input + "\" is not allowed.");
         }
     }
-
-
 }
