@@ -1,5 +1,6 @@
 package app;
 
+import java.io.InputStream;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -26,11 +27,12 @@ public class weatherVisualController {
         iconHashMap = initIconHashMap();
         weatherHashMap = App.getWeatherHashMap();
 
+        System.out.println(App.getLocation());
         locationText.setText(App.getLocation());
 
-        String[] times = fillArray(8, "list.dt_txt");
-        String[] temperatures = fillArray(8, "list.main.temp");
-        String[] feelsLikeTemperatures = fillArray(8, "list.main.feels_like");
+        String[] times = fillArray(8, "dt_txt");
+        String[] temperatures = fillArray(8, "main.temp");
+        String[] feelsLikeTemperatures = fillArray(8, "main.feels_like");
 
         // Assuming there are 8 columns as per the FXML GridPane setup
         for (int i = 0; i < 8; i++) {
@@ -39,7 +41,14 @@ public class weatherVisualController {
             grid.add(timeLabel, i, 0);
 
             // Image (weather icon)
-            ImageView weatherIcon = new ImageView(new Image("path/to/your/image.png"));
+            String weatherID = weatherHashMap.get(i).getJSONArray("weather").getJSONObject(0).getString("icon");
+            ImageView weatherIcon = new ImageView(iconHashMap.get(weatherID));
+
+            weatherIcon.setFitWidth(100); 
+            weatherIcon.setFitHeight(100);
+            weatherIcon.setPreserveRatio(true);
+            weatherIcon.setSmooth(true);
+
             grid.add(weatherIcon, i, 1);
 
             // Temperature
@@ -54,38 +63,61 @@ public class weatherVisualController {
 
     private HashMap<String, Image> initIconHashMap() {
         HashMap<String, Image> map = new HashMap<String, Image>();
-        
-        iconHashMap.put("01d", new Image("/icons/01d.png"));
-        iconHashMap.put("01n", new Image("/icons/01n.png"));
-        iconHashMap.put("02d", new Image("/icons/02d.png"));
-        iconHashMap.put("02n", new Image("/icons/02n.png"));
-        iconHashMap.put("03d", new Image("/icons/03d.png"));
-        iconHashMap.put("03n", new Image("/icons/03n.png"));
-        iconHashMap.put("04d", new Image("/icons/04d.png"));
-        iconHashMap.put("04n", new Image("/icons/04n.png"));
-        iconHashMap.put("09d", new Image("/icons/09d.png"));
-        iconHashMap.put("09n", new Image("/icons/09n.png"));
-        iconHashMap.put("10d", new Image("/icons/10d.png"));
-        iconHashMap.put("10n", new Image("/icons/10n.png"));
-        iconHashMap.put("11d", new Image("/icons/11d.png"));
-        iconHashMap.put("11n", new Image("/icons/11n.png"));
-        iconHashMap.put("13d", new Image("/icons/13d.png"));
-        iconHashMap.put("13n", new Image("/icons/13n.png"));
-        iconHashMap.put("50d", new Image("/icons/50d.png"));
-        iconHashMap.put("50n", new Image("/icons/50n.png"));
 
+        try {
+            putCommandFormatter(map, "01d");
+            putCommandFormatter(map, "01n");
+            putCommandFormatter(map, "02d");
+            putCommandFormatter(map, "02n");
+            putCommandFormatter(map, "03d");
+            putCommandFormatter(map, "03n");
+            putCommandFormatter(map, "04d");
+            putCommandFormatter(map, "04n");
+            putCommandFormatter(map, "09d");
+            putCommandFormatter(map, "09n");
+            putCommandFormatter(map, "10d");
+            putCommandFormatter(map, "10n");
+            putCommandFormatter(map, "11d");
+            putCommandFormatter(map, "11n");
+            putCommandFormatter(map, "13d");
+            putCommandFormatter(map, "13n");
+            putCommandFormatter(map, "50d");
+            putCommandFormatter(map, "50n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return map;
+    }
+
+    private void putCommandFormatter(HashMap<String, Image> iconHashMap,String iconID) throws Exception {
+        InputStream is = getClass().getResourceAsStream("/app/icons/" + iconID + ".png");
+        if(is == null) {
+            throw new Exception("Incorrect file path");
+        } 
+
+        else {
+            iconHashMap.put(iconID, new Image(is));
+        }
     }
     
     private String[] fillArray(int size, String responseField) {
         String[] arrayFiller = new String[size];
+        String[] responseCalls = responseField.split("\\.");
 
         for(int i = 0; i < size; i++) {
-            JSONObject obj = weatherHashMap.get(i);
-            arrayFiller[i] = obj.getString(responseField);
+            JSONObject currentWeather = weatherHashMap.get(i);
+            if(responseCalls[0].equals("main")) {
+                arrayFiller[i] = String.valueOf(currentWeather.getJSONObject("main").getDouble(responseCalls[1]));
+            }
+
+            else {
+                arrayFiller[i] = currentWeather.getString(responseCalls[0]);
+            }
         }
         
         return arrayFiller;
     }    
 }
+
+

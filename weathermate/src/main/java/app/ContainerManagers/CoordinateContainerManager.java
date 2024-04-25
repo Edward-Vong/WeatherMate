@@ -39,6 +39,7 @@ public class CoordinateContainerManager {
         searchButton.setOnAction(event -> {
             try {
                 performSearch();
+                App.setRoot("weatherVisual");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

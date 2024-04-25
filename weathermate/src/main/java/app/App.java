@@ -30,7 +30,7 @@ public class App extends Application {
         stage.setTitle("WeatherMate");
     }
 
-    static void setRoot(String fxml) throws IOException {
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
@@ -43,11 +43,10 @@ public class App extends Application {
         launch();
     }
 
-    public static void setWeatherHashMap(@SuppressWarnings("exports") HashMap<Integer, JSONObject> weatherHashMap) {
+    public static void setWeatherHashMap( HashMap<Integer, JSONObject> weatherHashMap) {
         App.weatherHashMap = weatherHashMap;
     }
 
-    @SuppressWarnings("exports")
     public static HashMap<Integer, JSONObject> getWeatherHashMap() {
         return weatherHashMap;
     }

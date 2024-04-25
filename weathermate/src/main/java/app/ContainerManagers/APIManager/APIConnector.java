@@ -51,7 +51,8 @@ public class APIConnector {
     public HashMap<Integer, JSONObject> getWeatherHashMap(String query) throws IOException {
         //collect the response data into usable objects
         JSONObject jsonData = getJSONObj(query);
-        App.setLocation(jsonData.getString("city.name"));
+        App.setLocation(jsonData.getJSONObject("city").getString("name"));
+
         JSONArray weatherArr = new JSONArray(jsonData.getJSONArray("list"));
         
         //initialize hashmap
@@ -62,8 +63,9 @@ public class APIConnector {
 
         //For every element in list, put them into HashMap with associated id value
         for(int i = 0; i < count; i++) {
-            jsonData = new JSONObject(weatherArr.getJSONObject(i));
-            weatherHashMap.put(i, jsonData);
+            JSONObject weatherData = weatherArr.getJSONObject(i);
+            System.out.println(weatherData);
+            weatherHashMap.put(i, weatherData);
         }
 
         //if the size of the Hash is not equal to the count of elements in the list throw error
