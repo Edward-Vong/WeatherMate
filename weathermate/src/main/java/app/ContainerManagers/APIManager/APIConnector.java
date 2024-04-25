@@ -15,10 +15,38 @@ public class APIConnector {
     private URL url;
     private HttpURLConnection conn;
 
-    public HashMap<Integer, JSONObject> getWeatherHashMap(String geoQuery) throws IOException {
-        //get the query url for the api call
-        String query = getQuery(geoQuery);
+    public String getQuery(String geoURL, String searchType) throws IOException {
+        if (URLconnection(geoURL)) {
+            String JSON = String.valueOf(transcribeJSON());
+            JSONObject jsonObj;
 
+            if (searchType == "city") {
+                JSONArray jsonArr = new JSONArray(JSON);
+                jsonObj = jsonArr.getJSONObject(0);
+            }
+
+            else {
+                jsonObj = new JSONObject(JSON);
+            }
+
+            double[] coords = new double[2];
+
+            coords[0] = jsonObj.getDouble("lat");
+            coords[1] = jsonObj.getDouble("lon");
+
+            URLBuilder builder = new URLBuilder();
+            
+            System.out.println("lat: " + coords[0] + "\nlon: " + coords[1]);
+            String query = builder.getQueryUrl(coords[0], coords[1]);
+            System.out.print(query + "\n");
+
+            return query;
+        }
+
+        return null;
+    }
+
+    public HashMap<Integer, JSONObject> getWeatherHashMap(String query) throws IOException {
         //collect the response data into usable objects
         JSONObject jsonData = getJSONObj(query);
         JSONArray weatherArr = new JSONArray(jsonData.getJSONArray("list"));
@@ -91,29 +119,6 @@ public class APIConnector {
             e.printStackTrace();
             throw new IOException("Failed to connect due to an unspecified error.", e);
         }
-    }
-
-    private String getQuery(String geoURL) throws IOException {
-        if (URLconnection(geoURL)) {
-            String JSON = String.valueOf(transcribeJSON());
-            JSONArray jsonArr = new JSONArray(JSON);
-            JSONObject jsonObj = jsonArr.getJSONObject(0);
-
-            double[] coords = new double[2];
-
-            coords[0] = jsonObj.getDouble("lat");
-            coords[1] = jsonObj.getDouble("lon");
-
-            URLBuilder builder = new URLBuilder();
-            
-            System.out.println("lat: " + coords[0] + "\nlon: " + coords[1]);
-            String query = builder.getQueryUrl(coords[0], coords[1]);
-            System.out.print(query + "\n");
-
-            return query;
-        }
-
-        return null;
     }
 
     private JSONObject getJSONObj(String query) throws IOException {

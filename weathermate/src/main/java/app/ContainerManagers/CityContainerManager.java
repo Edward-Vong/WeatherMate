@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import app.ContainerManagers.APIManager.URLBuilder;
 import app.ContainerManagers.Utilities.ComboBoxUtility;
+import app.App;
 import app.ContainerManagers.APIManager.APIConnector;
 
 public class CityContainerManager {
@@ -85,7 +86,8 @@ public class CityContainerManager {
 
         //have the data coordinates create a HashMap for forecast data
         APIConnector connector = new APIConnector();
-        connector.getWeatherHashMap(geoQueryString);
+        String query = connector.getQuery(geoQueryString, "city");
+        App.setWeatherHashMap(connector.getWeatherHashMap(query));
     }
 
     private void illegalSearchArg(String input, String type, ObservableList<String> list) {

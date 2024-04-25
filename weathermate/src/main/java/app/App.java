@@ -6,13 +6,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * JavaFX App
  */
 public class App extends Application {
 
+    private static HashMap<Integer, JSONObject> weatherHashMap;
     private static Scene scene;
 
     @SuppressWarnings("exports")
@@ -35,6 +39,15 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static void setWeatherHashMap(@SuppressWarnings("exports") HashMap<Integer, JSONObject> weatherHashMap) {
+        App.weatherHashMap = weatherHashMap;
+    }
+
+    @SuppressWarnings("exports")
+    public HashMap<Integer, JSONObject> getWeatherHashMap() {
+        return weatherHashMap;
     }
 
 }

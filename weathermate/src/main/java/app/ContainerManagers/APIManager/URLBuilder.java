@@ -30,7 +30,7 @@ public class URLBuilder {
 
     public String getQueryUrl(double lat, double lon) {
         String query = WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon;
-        return buildUrl(query)  + "&units=imperial";
+        return buildUrl(query)  + "&units=imperial&cnt=8";
     }
 
     public String cityGeoURL(String city, String stateCode, String countryCode) {
