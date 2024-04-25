@@ -1,11 +1,13 @@
 package app;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
 import org.json.JSONObject;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,6 +24,11 @@ public class weatherVisualController {
 
     private HashMap<Integer, JSONObject> weatherHashMap;
     private HashMap<String, Image> iconHashMap;
+
+    @FXML
+    private void back() throws IOException{
+        App.setRoot("home");
+    }
 
     public void initialize() {
         iconHashMap = initIconHashMap();
