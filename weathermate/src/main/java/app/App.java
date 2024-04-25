@@ -17,6 +17,8 @@ import java.util.HashMap;
 public class App extends Application {
 
     private static HashMap<Integer, JSONObject> weatherHashMap;
+    private static String location;
+
     private static Scene scene;
 
     @SuppressWarnings("exports")
@@ -46,8 +48,16 @@ public class App extends Application {
     }
 
     @SuppressWarnings("exports")
-    public HashMap<Integer, JSONObject> getWeatherHashMap() {
+    public static HashMap<Integer, JSONObject> getWeatherHashMap() {
         return weatherHashMap;
+    }
+
+    public static void setLocation(String location) {
+        App.location = location;
+    }
+
+    public static String getLocation() {
+        return location;
     }
 
 }

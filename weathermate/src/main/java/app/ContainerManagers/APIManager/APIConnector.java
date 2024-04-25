@@ -3,6 +3,8 @@ package app.ContainerManagers.APIManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import app.App;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -49,6 +51,7 @@ public class APIConnector {
     public HashMap<Integer, JSONObject> getWeatherHashMap(String query) throws IOException {
         //collect the response data into usable objects
         JSONObject jsonData = getJSONObj(query);
+        App.setLocation(jsonData.getString("city.name"));
         JSONArray weatherArr = new JSONArray(jsonData.getJSONArray("list"));
         
         //initialize hashmap
