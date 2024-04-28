@@ -36,6 +36,7 @@ public class HomeUIManager {
     @FXML
     public void initialize() {
         locationTypeChoiceBox.getItems().addAll("City", "Zip", "Coordinate");
+        
         cityContainerManager = new CityContainerManager(stateCodes, countryCodes);
         zipContainerManager = new ZipContainerManager(countryCodes);
         coordinateContainerManger = new CoordinateContainerManager();
