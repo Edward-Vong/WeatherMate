@@ -10,7 +10,7 @@ public abstract class BaseContainerManager {
 
     public BaseContainerManager() {
         container = new HBox();
-        container.setId(getClass().getSimpleName() + "Container");  // Dynamic ID based on class name
+        container.setId(getClass().getSimpleName() + "Container");
     }
 
     public HBox getContainer() {
