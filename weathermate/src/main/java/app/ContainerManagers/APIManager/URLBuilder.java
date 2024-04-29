@@ -2,7 +2,6 @@ package app.ContainerManagers.APIManager;
 
 import java.util.Properties;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -13,7 +12,10 @@ public class URLBuilder {
 
     public URLBuilder() throws FileNotFoundException, IOException {
         Properties p = new Properties();
-        try(InputStream input = new FileInputStream("properties/config.properties")) {
+        try (InputStream input = getClass().getResourceAsStream("/app/config.properties")) { // Notice the leading slash
+            if (input == null) {
+                throw new FileNotFoundException("config.properties file not found in classpath under /app");
+            }
             p.load(input);
             key = p.getProperty("api_key");
         }
@@ -35,13 +37,13 @@ public class URLBuilder {
 
     public String cityGeoURL(String city, String stateCode, String countryCode) {
         String geoURL = GEOCODE_URL;
-    
+
         String formattedCity = city.replace(" ", "_");
-    
+
         geoURL += "direct?q=" + formattedCity;
         if (!stateCode.isEmpty()) geoURL += "," + stateCode;
         if (!countryCode.isEmpty()) geoURL += "," + countryCode;
-    
+
         return buildUrl(geoURL);
     }
 

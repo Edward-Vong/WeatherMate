@@ -9,13 +9,18 @@ import javafx.collections.ObservableList;
 import app.ContainerManagers.CityContainerManager;
 import app.ContainerManagers.CoordinateContainerManager;
 import app.ContainerManagers.ZipContainerManager;
+import javafx.scene.text.Font;
 
 public class HomeUIManager {
 
     @FXML
-    private VBox mainContainer;
+    private AnchorPane mainContainer;
     @FXML
     private ChoiceBox<String> locationTypeChoiceBox;
+    @FXML
+    private VBox homeBoxContainer;
+    @FXML
+    private Label weatherMateLabel;
 
     private CityContainerManager cityContainerManager;
     private ZipContainerManager zipContainerManager;
@@ -35,6 +40,8 @@ public class HomeUIManager {
 
     @FXML
     public void initialize() {
+        mainContainer.setStyle("-fx-background-color: lightskyblue;");
+        weatherMateLabel.setFont(Font.font("Arial", 49));
         locationTypeChoiceBox.getItems().addAll("City", "Zip", "Coordinate");
         
         cityContainerManager = new CityContainerManager(stateCodes, countryCodes);
@@ -46,16 +53,16 @@ public class HomeUIManager {
 
     private void setupChoiceBoxListeners() {
         locationTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mainContainer.getChildren().removeIf(child -> child instanceof HBox && !child.getId().equals("searchTypeBar"));
+            homeBoxContainer.getChildren().removeIf(child -> child instanceof HBox && !child.getId().equals("searchTypeBar"));
             switch (newValue) {
                 case "City":
-                    mainContainer.getChildren().add(cityContainerManager.getContainer());
+                    homeBoxContainer.getChildren().add(cityContainerManager.getContainer());
                     break;
                 case "Zip":
-                    mainContainer.getChildren().add(zipContainerManager.getContainer());
+                    homeBoxContainer.getChildren().add(zipContainerManager.getContainer());
                     break;
                 case "Coordinate":
-                    mainContainer.getChildren().add(coordinateContainerManger.getContainer());
+                    homeBoxContainer.getChildren().add(coordinateContainerManger.getContainer());
                     break;
             }
         });

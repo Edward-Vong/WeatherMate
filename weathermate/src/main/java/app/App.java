@@ -24,7 +24,8 @@ public class App extends Application {
     @SuppressWarnings("exports")
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("home"), 640, 480);
+        scene = new Scene(loadFXML("home"), 700, 480);
+        scene.getRoot().setStyle("-fx-font-family: 'Arial'");
         stage.setScene(scene);
         stage.show();
         stage.setTitle("WeatherMate");
@@ -32,6 +33,8 @@ public class App extends Application {
 
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
+        scene.getRoot().setStyle("-fx-font-family: 'Arial'");
+
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

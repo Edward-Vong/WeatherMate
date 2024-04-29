@@ -32,8 +32,8 @@ public class CityContainerManager extends BaseContainerManager {
         cityTextField.setPromptText("Enter a city name");
         container.getChildren().add(cityTextField);
 
-        stateComboBox = ComboBoxUtility.initializeComboBox(stateCodes, 0, 150);
-        countryComboBox = ComboBoxUtility.initializeComboBox(countryCodes, 0, 150);
+        stateComboBox = ComboBoxUtility.initializeComboBox(stateCodes, 0, 170);
+        countryComboBox = ComboBoxUtility.initializeComboBox(countryCodes, 0, 180);
 
         countryComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             stateComboBox.setDisable(!"US".equals(newVal));

@@ -26,6 +26,8 @@ public abstract class BaseContainerManager {
             try {
                 performSearch();
                 App.setRoot("weatherVisual");
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
