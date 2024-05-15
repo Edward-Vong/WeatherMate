@@ -1,10 +1,10 @@
 module app {
-   
-    requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;
     
     requires transitive org.json;
-    requires java.net.http;
+    requires transitive javafx.controls;
+    requires transitive javafx.graphics;
 
     opens app to javafx.fxml;
     exports app;

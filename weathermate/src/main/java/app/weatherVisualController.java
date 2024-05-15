@@ -50,7 +50,6 @@ public class weatherVisualController {
 
         String[] times = fillArray(8, "dt_txt");
         String[] temperatures = fillArray(8, "main.temp");
-        String[] feelsLikeTemperatures = fillArray(8, "main.feels_like");
         fillCurrent();
 
         // Assuming there are 8 columns as per the FXML GridPane setup
