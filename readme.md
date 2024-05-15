@@ -73,3 +73,7 @@ Steps to run code:
     - Go into App.java file [App File Link](./weathermate/src/main/java/app/App.java)
     - Click the Green arrow at line 17
     - For the project our SDK was java 22. We are not totally sure if other Javas maybe able to run it
+
+Snapshot of running program:
+[alt text](runningProgram.png)
+
