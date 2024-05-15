@@ -75,5 +75,5 @@ Steps to run code:
     - For the project our SDK was java 22. We are not totally sure if other Javas maybe able to run it
 
 Snapshot of running program:
-[alt text](https://github.com/Edward-Vong/CS151-WeatherMate/blob/main/runningProgram.png)
+![alt text](https://github.com/Edward-Vong/CS151-WeatherMate/blob/main/runningProgram.png)
 
